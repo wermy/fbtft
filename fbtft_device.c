@@ -205,7 +205,9 @@ static struct fbtft_device_display displays[] = {
 			.platform_data = &(struct fbtft_platform_data) {
 				.display = {
 					.buswidth = 8,
-					.backlight = 1,
+					.regwidth = 8,
+					.width = 128,
+					.height = 128,
 					.fbtftops.set_addr_win = \
 					    adafruit18_green_tab_set_addr_win,
 				},
