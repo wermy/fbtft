@@ -1130,6 +1130,10 @@ static void adafruit18_green_tab_set_addr_win(struct fbtft_par *par,
 {
 	fbtft_par_dbg(DEBUG_SET_ADDR_WIN, par,
 		"%s(xs=%d, ys=%d, xe=%d, ye=%d)\n", __func__, xs, ys, xe, ye);
+	xs += 1;
+	xe += 1;
+	ys += 2;
+	ye += 2;
 	write_reg(par, 0x2A, 0, xs + 2, 0, xe + 2);
 	write_reg(par, 0x2B, 0, ys + 1, 0, ye + 1);
 	write_reg(par, 0x2C);
