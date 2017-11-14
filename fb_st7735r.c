@@ -102,7 +102,7 @@ static void set_addr_win(struct fbtft_par *par, int xs, int ys, int xe, int ye)
 	xe += 1;
 	ys += 2;
 	ye += 2;
-	
+
 	/* Column address */
 	write_reg(par, 0x2A, xs >> 8, xs & 0xFF, xe >> 8, xe & 0xFF);
 
@@ -176,7 +176,7 @@ static int set_gamma(struct fbtft_par *par, unsigned long *curves)
 static struct fbtft_display display = {
 	.regwidth = 8,
 	.width = 128,
-	.height = 160,
+	.height = 128,
 	.init_sequence = default_init_sequence,
 	.gamma_num = 2,
 	.gamma_len = 16,
