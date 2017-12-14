@@ -185,7 +185,11 @@ static struct fbtft_device_display displays[] = {
 			.platform_data = &(struct fbtft_platform_data) {
 				.display = {
 					.buswidth = 8,
-					.backlight = 1,
+					.regwidth = 8,
+					.width = 128,
+					.height = 128,
+					.fbtftops.set_addr_win = \
+					    adafruit18_green_tab_set_addr_win,
 				},
 				.gpios = (const struct fbtft_gpio []) {
 					{ "reset", 25 },
@@ -205,6 +209,7 @@ static struct fbtft_device_display displays[] = {
 			.platform_data = &(struct fbtft_platform_data) {
 				.display = {
 					.buswidth = 8,
+					.backlight = 1,
 					.regwidth = 8,
 					.width = 128,
 					.height = 128,
@@ -1128,20 +1133,24 @@ static int write_gpio16_wr_slow(struct fbtft_par *par, void *buf, size_t len)
 }
 
 static void adafruit18_green_tab_set_addr_win(struct fbtft_par *par,
-						int xs, int ys, int xe, int ye)
+                        int xs, int ys, int xe, int ye)
 {
-	fbtft_par_dbg(DEBUG_SET_ADDR_WIN, par,
-		"%s(xs=%d, ys=%d, xe=%d, ye=%d)\n", __func__, xs, ys, xe, ye);
-	xs += 1;
-	xe += 1;
-	ys += 2;
-	ye += 2;
-	write_reg(par, 0x2A, 0, xs + 2, 0, xe + 2);
-	write_reg(par, 0x2B, 0, ys + 1, 0, ye + 1);
-	write_reg(par, 0x2C);
+  if (rotate == 90) {
+    write_reg(par, 0x2A, 0, xs + 1, 0, xe + 1);
+    write_reg(par, 0x2B, 0, ys + 2, 0, ye + 2);
+  } else if (rotate == 270) {
+    write_reg(par, 0x2A, 0, xs + 3, 0, xe + 3);
+    write_reg(par, 0x2B, 0, ys + 2, 0, ye + 2);
+  } else if (rotate == 0) {
+    write_reg(par, 0x2A, 0, xs+2, 0, xe + 2);
+    write_reg(par, 0x2B, 0, ys+3, 0, ye + 3);
+  } else {
+    write_reg(par, 0x2A, 0, xs+2, 0, xe + 2);
+    write_reg(par, 0x2B, 0, ys+1, 0, ye + 1);
+  }
+  write_reg(par, 0x2C);
 }
 
-/* used if gpios parameter is present */
 static struct fbtft_gpio fbtft_device_param_gpios[MAX_GPIOS+1] = { };
 
 static void fbtft_device_pdev_release(struct device *dev)
